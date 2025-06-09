@@ -1,0 +1,7 @@
+flask==2.2.5
+flask-cors
+networkx
+numpy
+requests
+beautifulsoup4
+Werkzeug==2.2.3 
