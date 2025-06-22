@@ -83,6 +83,7 @@ PageRank_Web/
 - **Biểu đồ trực quan:** Hiển thị kết quả dạng biểu đồ cột
 - **Responsive:** Tương thích mobile và desktop
 - **Real-time:** Tính toán trực tuyến
+- **Animations:** Hiệu ứng mượt mà
 
 ## 🛠️ Troubleshooting
 
@@ -151,4 +152,46 @@ Công thức: `PR(A) = (1-d)/N + d∑PR(Ti)/C(Ti)`
 - **Màu sắc:** Trắng xanh (#2196F3, #1976D2)
 - **Logo:** Thiết kế toán học với công thức PageRank
 - **Responsive:** Tương thích mọi thiết bị
-- **Animations:** Hiệu ứng mượt mà 
+- **Animations:** Hiệu ứng mượt mà
+
+## 🌐 Hướng dẫn Deploy (Triển khai lên Internet)
+
+Phần này hướng dẫn cách đưa ứng dụng lên Internet để mọi người có thể truy cập.
+
+### **Bước 1: Deploy Backend (Flask API) lên Render**
+
+1.  **Đăng ký/Đăng nhập:** Truy cập [dashboard.render.com](https://dashboard.render.com/) và đăng nhập bằng tài khoản GitHub.
+2.  **Tạo Web Service mới:**
+    *   Nhấn **"New +" -> "Web Service"**.
+    *   Chọn **"Build and deploy from a Git repository"**.
+    *   Kết nối và chọn kho chứa `final-web-pagerank` từ GitHub.
+3.  **Cấu hình Service:**
+    *   **Name:** `final-web-pagerank` (hoặc tên bạn muốn).
+    *   **Root Directory:** **Để trống** (vì `app.py` nằm ở thư mục gốc).
+    *   **Runtime:** `Python 3`.
+    *   **Build Command:** `pip install -r requirements.txt`.
+    *   **Start Command:** `gunicorn app:app`.
+    *   **Instance Type:** Chọn **"Free"**.
+4.  **Triển khai:** Nhấn **"Create Web Service"**. Chờ quá trình hoàn tất và copy lại URL của backend (ví dụ: `https://final-web-pagerank.onrender.com`).
+
+### **Bước 2: Deploy Frontend (React App) lên Netlify**
+
+1.  **Đăng ký/Đăng nhập:** Truy cập [app.netlify.com/signup](https://app.netlify.com/signup) và đăng nhập bằng tài khoản GitHub.
+2.  **Import dự án mới:**
+    *   Nhấn **"Add new site" -> "Import an existing project"**.
+    *   Chọn **"Deploy with GitHub"**.
+    *   Kết nối và chọn kho chứa `final-web-pagerank`.
+3.  **Cấu hình Build:**
+    *   **Base directory:** `frontend`
+    *   **Build command:** `npm run build`
+    *   **Publish directory:** `frontend/build`
+4.  **Thêm Biến Môi Trường:**
+    *   Nhấn **"Show advanced" -> "New variable"**.
+    *   **Key:** `REACT_APP_API_URL`
+    *   **Value:** Dán URL của backend Render đã copy ở trên.
+5.  **Triển khai:** Nhấn **"Deploy site"**. Chờ quá trình hoàn tất và truy cập vào link mà Netlify cung cấp.
+
+### **Liên kết cuối cùng**
+
+*   **Backend:** `https://final-web-pagerank.onrender.com`
+*   **Frontend:** `https://finalwebpagerank.netlify.app` (Ví dụ) 
