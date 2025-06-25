@@ -1,17 +1,17 @@
 # PageRank Calculator Web Application
 
-Ứng dụng web tính toán PageRank cho các trang web sử dụng thuật toán của Google.
+A web application to calculate PageRank for websites using Google's PageRank algorithm.
 
-## 🚀 Hướng dẫn chạy ứng dụng
+## 🚀 Getting Started
 
-### Yêu cầu hệ thống
+### Requirements
 - Python 3.7+
 - Node.js 14+
-- npm hoặc yarn
+- npm or yarn
 
-### Bước 1: Cài đặt Backend (Python/Flask)
+### Step 1: Backend Setup (Python/Flask)
 
-1. **Tạo môi trường ảo Python:**
+1. **Create a Python virtual environment:**
 ```bash
 # Windows
 python -m venv venv
@@ -22,51 +22,51 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-2. **Cài đặt dependencies:**
+2. **Install dependencies:**
 ```bash
 pip install -r requirements.txt
 ```
 
-3. **Chạy backend server:**
+3. **Run the backend server:**
 ```bash
 python app.py
 ```
 
-Backend sẽ chạy tại: `http://localhost:5000`
+The backend will run at: `http://localhost:5000`
 
-### Bước 2: Cài đặt Frontend (React)
+### Step 2: Frontend Setup (React)
 
-1. **Di chuyển vào thư mục frontend:**
+1. **Navigate to the frontend directory:**
 ```bash
 cd frontend
 ```
 
-2. **Cài đặt dependencies:**
+2. **Install dependencies:**
 ```bash
 npm install
 ```
 
-3. **Chạy frontend development server:**
+3. **Run the frontend development server:**
 ```bash
 npm start
 ```
 
-Frontend sẽ chạy tại: `http://localhost:3000`
+The frontend will run at: `http://localhost:3000`
 
-### Bước 3: Sử dụng ứng dụng
+### Step 3: Using the Application
 
-1. Mở trình duyệt và truy cập: `http://localhost:3000`
-2. Nhập các URL cần phân tích (mỗi URL một dòng)
-3. Nhấn "Calculate PageRank"
-4. Xem kết quả và biểu đồ
+1. Open your browser and go to: `http://localhost:3000`
+2. Enter the URLs to analyze (one per line)
+3. Click "Calculate PageRank"
+4. View the results and chart
 
-## 📁 Cấu trúc dự án
+## 📁 Project Structure
 
 ```
 PageRank_Web/
 ├── app.py                 # Backend Flask server
 ├── requirements.txt       # Python dependencies
-├── frontend/             # React frontend
+├── frontend/              # React frontend
 │   ├── src/
 │   │   ├── App.js        # Main React component
 │   │   ├── App.css       # Styles
@@ -76,36 +76,35 @@ PageRank_Web/
 └── README.md
 ```
 
-## 🔧 Tính năng
+## 🔧 Features
 
-- **Tính toán PageRank:** Sử dụng thuật toán Google PageRank
-- **Giao diện đẹp:** Thiết kế trắng xanh hiện đại
-- **Biểu đồ trực quan:** Hiển thị kết quả dạng biểu đồ cột
-- **Responsive:** Tương thích mobile và desktop
-- **Real-time:** Tính toán trực tuyến
-- **Animations:** Hiệu ứng mượt mà
+- **PageRank Calculation:** Uses Google's PageRank algorithm
+- **Modern UI:** Clean blue and white design
+- **Visualization:** Results displayed as a table and bar chart
+- **Responsive:** Works on both mobile and desktop
+- **Real-time:** Instant calculation and display
 
 ## 🛠️ Troubleshooting
 
-### Lỗi thường gặp:
+### Common Issues:
 
-1. **Port 5000 đã được sử dụng:**
+1. **Port 5000 already in use:**
 ```bash
-# Thay đổi port trong app.py
+# Change port in app.py
 app.run(debug=True, port=5001)
 ```
 
-2. **Port 3000 đã được sử dụng:**
+2. **Port 3000 already in use:**
 ```bash
-# React sẽ tự động hỏi chuyển sang port khác
-# Hoặc dừng process đang sử dụng port 3000
+# React will prompt to use another port
+# Or stop the process using port 3000
 ```
 
-3. **Lỗi CORS:**
-- Đảm bảo backend đang chạy
-- Kiểm tra URL trong frontend có đúng không
+3. **CORS Error:**
+- Ensure the backend is running
+- Check the API URL in the frontend
 
-4. **Lỗi dependencies:**
+4. **Dependency Errors:**
 ```bash
 # Backend
 pip install --upgrade pip
@@ -115,83 +114,83 @@ pip install -r requirements.txt
 npm install --force
 ```
 
-## 📊 Cách sử dụng
+## 📊 How to Use
 
-1. **Nhập URLs:** Mỗi URL một dòng
+1. **Enter URLs:** One per line
    ```
    https://example.com
    https://example.org
    https://example.net
    ```
 
-2. **Tính toán:** Nhấn nút "Calculate PageRank"
+2. **Calculate:** Click "Calculate PageRank"
 
-3. **Kết quả:** 
-   - Bảng xếp hạng PageRank
-   - Biểu đồ trực quan
-   - Score từ 0-1 (cao hơn = quan trọng hơn)
+3. **Results:**
+   - PageRank ranking table
+   - Visualization chart
+   - Scores from 0-1 (higher = more important)
 
-## 🔍 Thuật toán PageRank
+## 🔍 PageRank Algorithm
 
-PageRank tính toán tầm quan trọng của trang web dựa trên:
-- Số lượng link trỏ đến trang
-- Tầm quan trọng của các trang link đến
-- Damping factor (thường là 0.85)
+PageRank calculates the importance of a web page based on:
+- The number of links to the page
+- The importance of linking pages
+- Damping factor (usually 0.85)
 
-Công thức: `PR(A) = (1-d)/N + d∑PR(Ti)/C(Ti)`
+Formula: `PR(A) = (1-d)/N + d∑PR(Ti)/C(Ti)`
 
-## 📝 Ghi chú
+## 📝 Notes
 
-- Đảm bảo cả backend và frontend đều đang chạy
-- URLs phải có protocol (http:// hoặc https://)
-- Một số trang web có thể chặn crawler
-- Kết quả phụ thuộc vào cấu trúc link giữa các trang
+- Ensure both backend and frontend are running
+- URLs must include protocol (http:// or https://)
+- Some websites may block crawlers
+- Results depend on the link structure between pages
 
-## 🎨 Giao diện
+## 🎨 UI Design
 
-- **Màu sắc:** Trắng xanh (#2196F3, #1976D2)
-- **Logo:** Thiết kế toán học với công thức PageRank
-- **Responsive:** Tương thích mọi thiết bị
-- **Animations:** Hiệu ứng mượt mà
+- **Colors:** Blue and white (#2196F3, #1976D2)
+- **Logo:** Math-inspired with PageRank formula
+- **Responsive:** Works on all devices
+- **Animations:** Smooth transitions
 
-## 🌐 Hướng dẫn Deploy (Triển khai lên Internet)
+## 🌐 Deployment Guide (Deploy to the Internet)
 
-Phần này hướng dẫn cách đưa ứng dụng lên Internet để mọi người có thể truy cập.
+This section explains how to make your app public.
 
-### **Bước 1: Deploy Backend (Flask API) lên Render**
+### Step 1: Deploy Backend (Flask API) to Render
 
-1.  **Đăng ký/Đăng nhập:** Truy cập [dashboard.render.com](https://dashboard.render.com/) và đăng nhập bằng tài khoản GitHub.
-2.  **Tạo Web Service mới:**
-    *   Nhấn **"New +" -> "Web Service"**.
-    *   Chọn **"Build and deploy from a Git repository"**.
-    *   Kết nối và chọn kho chứa `final-web-pagerank` từ GitHub.
-3.  **Cấu hình Service:**
-    *   **Name:** `final-web-pagerank` (hoặc tên bạn muốn).
-    *   **Root Directory:** **Để trống** (vì `app.py` nằm ở thư mục gốc).
+1.  **Sign up/Login:** Go to [dashboard.render.com](https://dashboard.render.com/) and log in with GitHub.
+2.  **Create a new Web Service:**
+    *   Click **"New +" -> "Web Service"**.
+    *   Choose **"Build and deploy from a Git repository"**.
+    *   Connect and select your `final-web-pagerank` repo from GitHub.
+3.  **Configure the Service:**
+    *   **Name:** `final-web-pagerank` (or any name you like).
+    *   **Root Directory:** Leave blank (since `app.py` is in the root).
     *   **Runtime:** `Python 3`.
     *   **Build Command:** `pip install -r requirements.txt`.
     *   **Start Command:** `gunicorn app:app`.
-    *   **Instance Type:** Chọn **"Free"**.
-4.  **Triển khai:** Nhấn **"Create Web Service"**. Chờ quá trình hoàn tất và copy lại URL của backend (ví dụ: `https://final-web-pagerank.onrender.com`).
+    *   **Instance Type:** Choose **"Free"**.
+4.  **Deploy:** Click **"Create Web Service"**. Wait for the process to finish and copy the backend URL (e.g., `https://final-web-pagerank.onrender.com`).
 
-### **Bước 2: Deploy Frontend (React App) lên Netlify**
+### Step 2: Deploy Frontend (React App) to Netlify
 
-1.  **Đăng ký/Đăng nhập:** Truy cập [app.netlify.com/signup](https://app.netlify.com/signup) và đăng nhập bằng tài khoản GitHub.
-2.  **Import dự án mới:**
-    *   Nhấn **"Add new site" -> "Import an existing project"**.
-    *   Chọn **"Deploy with GitHub"**.
-    *   Kết nối và chọn kho chứa `final-web-pagerank`.
-3.  **Cấu hình Build:**
+1.  **Sign up/Login:** Go to [app.netlify.com/signup](https://app.netlify.com/signup) and log in with GitHub.
+2.  **Import a new project:**
+    *   Click **"Add new site" -> "Import an existing project"**.
+    *   Choose **"Deploy with GitHub"**.
+    *   Connect and select your `final-web-pagerank` repo.
+3.  **Build Configuration:**
     *   **Base directory:** `frontend`
     *   **Build command:** `npm run build`
     *   **Publish directory:** `frontend/build`
-4.  **Thêm Biến Môi Trường:**
-    *   Nhấn **"Show advanced" -> "New variable"**.
+4.  **Add Environment Variable:**
+    *   Click **"Show advanced" -> "New variable"**.
     *   **Key:** `REACT_APP_API_URL`
-    *   **Value:** Dán URL của backend Render đã copy ở trên.
-5.  **Triển khai:** Nhấn **"Deploy site"**. Chờ quá trình hoàn tất và truy cập vào link mà Netlify cung cấp.
+    *   **Value:** Paste the backend Render URL you copied above.
+5.  **Deploy:** Click **"Deploy site"**. Wait for the process to finish and access the link provided by Netlify.
 
-### **Liên kết cuối cùng**
+### Final Links
 
 *   **Backend:** `https://final-web-pagerank.onrender.com`
-*   **Frontend:** `https://finalwebpagerank.netlify.app` (Ví dụ) 
+*   **Frontend:** `https://finalwebpagerank.netlify.app` (example) 
