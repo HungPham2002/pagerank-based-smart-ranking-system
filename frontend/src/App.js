@@ -205,13 +205,23 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="PageRank Logo" />
-        <h1>Advanced PageRank Calculator</h1>
-        <p>Calculate PageRank scores using the Google algorithm with advanced options</p>
+      <header className="hcmus-header">
+        <div className="hcmus-header-content">
+          <img src={logo} className="hcmus-logo" alt="HCMUS Logo" />
+          <div>
+            <h1 className="hcmus-title">PageRank System</h1>
+            <div className="hcmus-subtitle">University of Science, VNU-HCM (HCMUS)</div>
+          </div>
+        </div>
       </header>
-      
-      <main className="App-main">
+      <nav className="hcmus-navbar">
+        <ul>
+          <li className="active">Home</li>
+          <li>About</li>
+          <li>Contact</li>
+        </ul>
+      </nav>
+      <main className="App-main hcmus-main">
         <form onSubmit={handleSubmit}>
           <div className="input-section">
             <label>Calculation Mode:</label>
@@ -397,6 +407,10 @@ function App() {
           </div>
         )}
       </main>
+      <footer className="hcmus-footer">
+        <div>© {new Date().getFullYear()} University of Science, VNU-HCM | PageRank System</div>
+        <div>Contact: <a href="mailto:info@hcmus.edu.vn">info@hcmus.edu.vn</a></div>
+      </footer>
     </div>
   );
 }
