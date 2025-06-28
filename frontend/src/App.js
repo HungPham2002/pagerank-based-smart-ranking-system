@@ -3,8 +3,170 @@ import './App.css';
 import logo from './logo.webp';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
+import ReactMarkdown from 'react-markdown';
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+
+const aboutContent = `# PageRank Calculator Web Application
+
+A web application to calculate PageRank for websites using Google's PageRank algorithm.
+
+## Getting Started
+
+### Requirements
+- Python 3.7+
+- Node.js 14+
+- npm or yarn
+
+### Step 1: Backend Setup (Python/Flask)
+
+1. **Create a Python virtual environment:**
+\`\`\`bash
+# Windows
+python -m venv venv
+venv\\Scripts\\activate
+
+# macOS/Linux
+python3 -m venv venv
+source venv/bin/activate
+\`\`\`
+
+2. **Install dependencies:**
+\`\`\`
+pip install -r requirements.txt
+\`\`\`
+
+3. **Run the backend server:**
+\`\`\`
+python app.py
+\`\`\`
+
+The backend will run at: http://localhost:5000
+
+### Step 2: Frontend Setup (React)
+
+1. **Navigate to the frontend directory:**
+\`\`\`
+cd frontend
+\`\`\`
+
+2. **Install dependencies:**
+\`\`\`
+npm install
+\`\`\`
+
+3. **Run the frontend development server:**
+\`\`\`
+npm start
+\`\`\`
+
+The frontend will run at: http://localhost:3000
+
+### Step 3: Using the Application
+
+1. Open your browser and go to: http://localhost:3000
+2. Enter the URLs to analyze (one per line)
+3. Click "Calculate PageRank"
+4. View the results and chart
+
+## Project Structure
+
+\`\`\`
+PageRank_Web/
+├── app.py                 # Backend Flask server
+├── requirements.txt       # Python dependencies
+├── frontend/              # React frontend
+│   ├── src/
+│   │   ├── App.js        # Main React component
+│   │   ├── App.css       # Styles
+│   │   └── logo.svg      # Logo
+│   ├── package.json      # Node.js dependencies
+│   └── public/
+└── README.md
+\`\`\`
+
+## Features
+
+- **PageRank Calculation:** Uses Google's PageRank algorithm
+- **Modern UI:** Clean blue and white design
+- **Visualization:** Results displayed as a table and bar chart
+- **Responsive:** Works on both mobile and desktop
+- **Real-time:** Instant calculation and display
+
+## Troubleshooting
+
+### Common Issues:
+
+1. **Port 5000 already in use:**
+\`\`\`
+# Change port in app.py
+app.run(debug=True, port=5001)
+\`\`\`
+
+2. **Port 3000 already in use:**
+\`\`\`
+# React will prompt to use another port
+# Or stop the process using port 3000
+\`\`\`
+
+3. **CORS Error:**
+- Ensure the backend is running
+- Check the API URL in the frontend
+
+4. **Dependency Errors:**
+\`\`\`
+# Backend
+pip install --upgrade pip
+pip install -r requirements.txt
+
+# Frontend
+npm install --force
+\`\`\`
+
+## How to Use
+
+1. **Enter URLs:** One per line
+   \`\`\`
+   https://example.com
+   https://example.org
+   https://example.net
+   \`\`\`
+
+2. **Calculate:** Click "Calculate PageRank"
+
+3. **Results:**
+   - PageRank ranking table
+   - Visualization chart
+   - Scores from 0-1 (higher = more important)
+
+## PageRank Algorithm
+
+PageRank calculates the importance of a web page based on:
+- The number of links to the page
+- The importance of linking pages
+- Damping factor (usually 0.85)
+
+Formula: PR(A) = (1-d)/N + d∑PR(Ti)/C(Ti)
+
+## Notes
+
+- Ensure both backend and frontend are running
+- URLs must include protocol (http:// or https://)
+- Some websites may block crawlers
+- Results depend on the link structure between pages
+
+## UI Design
+
+- **Colors:** Blue and white (#2196F3,#1976D2)
+- **Logo:** Math-inspired with PageRank formula
+- **Responsive:** Works on all devices
+- **Animations:** Smooth transitions
+
+### Final Links
+
+*   **Backend:** https://final-web-pagerank.onrender.com
+*   **Frontend:** https://finalwebpagerank.netlify.app 
+`;
 
 function App() {
   const [mode, setMode] = useState('urls'); // 'urls' or 'matrix'
@@ -16,6 +178,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [page, setPage] = useState('home'); // 'home' or 'about'
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -216,140 +379,146 @@ function App() {
       </header>
       <nav className="hcmus-navbar">
         <ul>
-          <li className="active">Home</li>
-          <li>About</li>
-          <li>Contact</li>
+          <li className={page === 'home' ? 'active' : ''} onClick={() => setPage('home')}>Home</li>
+          <li className={page === 'about' ? 'active' : ''} onClick={() => setPage('about')}>About</li>
+          <li><a href="mailto:info@hcmus.edu.vn" style={{ color: 'inherit', textDecoration: 'none' }}>Contact</a></li>
         </ul>
       </nav>
       <main className="App-main hcmus-main">
-        <form onSubmit={handleSubmit}>
-          <div className="input-section">
-            <label>Calculation Mode:</label>
-            <div style={{ marginBottom: '20px' }}>
-              <label style={{ marginRight: '20px', cursor: 'pointer' }}>
-                <input
-                  type="radio"
-                  name="mode"
-                  value="urls"
-                  checked={mode === 'urls'}
-                  onChange={(e) => setMode(e.target.value)}
-                  style={{ marginRight: '8px' }}
-                />
-                🕷️ Crawl URLs Automatically
-              </label>
-              <label style={{ cursor: 'pointer' }}>
-                <input
-                  type="radio"
-                  name="mode"
-                  value="matrix"
-                  checked={mode === 'matrix'}
-                  onChange={(e) => setMode(e.target.value)}
-                  style={{ marginRight: '8px' }}
-                />
-                📊 Manual Adjacency Matrix
-              </label>
-            </div>
-
-            <label htmlFor="urls">URLs (one per line):</label>
-            <textarea
-              id="urls"
-              value={urls}
-              onChange={(e) => setUrls(e.target.value)}
-              placeholder="https://google.com&#10;https://youtube.com&#10;https://github.com&#10;https://stackoverflow.com&#10;https://wikipedia.org"
-              rows="6"
-            />
-            
-            {mode === 'matrix' && (
-              <>
-                <label htmlFor="matrix" style={{ marginTop: '20px' }}>Adjacency Matrix (JSON format):</label>
-                <textarea
-                  id="matrix"
-                  value={adjacencyMatrix}
-                  onChange={(e) => setAdjacencyMatrix(e.target.value)}
-                  placeholder="[[0,1,1,0,0],&#10;[1,0,0,1,0],&#10;[0,1,0,1,1],&#10;[0,0,1,0,1],&#10;[1,0,0,1,0]]"
-                  rows="8"
-                />
-                <button 
-                  type="button" 
-                  onClick={generateExampleMatrix}
-                  style={{ marginTop: '10px', backgroundColor: '#4CAF50' }}
-                >
-                  🎲 Generate Example Matrix
-                </button>
-              </>
-            )}
-
-            <div style={{ marginTop: '20px', display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-              <div>
-                <label htmlFor="damping">Damping Factor (α):</label>
-                <input
-                  id="damping"
-                  type="number"
-                  min="0.1"
-                  max="0.99"
-                  step="0.01"
-                  value={dampingFactor}
-                  onChange={(e) => setDampingFactor(parseFloat(e.target.value))}
-                  style={{ 
-                    width: '100px', 
-                    padding: '8px', 
-                    border: '2px solid #e3f2fd', 
-                    borderRadius: '4px',
-                    marginLeft: '10px'
-                  }}
-                />
-                <small style={{ display: 'block', color: '#666', marginTop: '5px' }}>
-                  Default: 0.85 (Google's standard)
-                </small>
+        {page === 'about' ? (
+          <div className="input-section" style={{ maxWidth: 900, margin: '0 auto', background: '#fafbfc' }}>
+            <ReactMarkdown>{aboutContent}</ReactMarkdown>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <div className="input-section">
+              <label>Calculation Mode:</label>
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ marginRight: '20px', cursor: 'pointer' }}>
+                  <input
+                    type="radio"
+                    name="mode"
+                    value="urls"
+                    checked={mode === 'urls'}
+                    onChange={(e) => setMode(e.target.value)}
+                    style={{ marginRight: '8px' }}
+                  />
+                  🕷️ Crawl URLs Automatically
+                </label>
+                <label style={{ cursor: 'pointer' }}>
+                  <input
+                    type="radio"
+                    name="mode"
+                    value="matrix"
+                    checked={mode === 'matrix'}
+                    onChange={(e) => setMode(e.target.value)}
+                    style={{ marginRight: '8px' }}
+                  />
+                  📊 Manual Adjacency Matrix
+                </label>
               </div>
+
+              <label htmlFor="urls">URLs (one per line):</label>
+              <textarea
+                id="urls"
+                value={urls}
+                onChange={(e) => setUrls(e.target.value)}
+                placeholder="https://google.com&#10;https://youtube.com&#10;https://github.com&#10;https://stackoverflow.com&#10;https://wikipedia.org"
+                rows="6"
+              />
               
-              <div>
-                <label htmlFor="iterations">Max Iterations:</label>
-                <input
-                  id="iterations"
-                  type="number"
-                  min="10"
-                  max="1000"
-                  value={maxIterations}
-                  onChange={(e) => setMaxIterations(parseInt(e.target.value))}
-                  style={{ 
-                    width: '100px', 
-                    padding: '8px', 
-                    border: '2px solid #e3f2fd', 
-                    borderRadius: '4px',
-                    marginLeft: '10px'
-                  }}
-                />
-                <small style={{ display: 'block', color: '#666', marginTop: '5px' }}>
-                  Default: 100
-                </small>
-              </div>
-            </div>
-
-            <p style={{ marginTop: '15px', fontSize: '14px', color: '#666', textAlign: 'left' }}>
-              {mode === 'urls' ? (
+              {mode === 'matrix' && (
                 <>
-                  💡 <strong>URL Mode:</strong> The algorithm will automatically crawl each URL to find links between pages and calculate PageRank scores.
-                </>
-              ) : (
-                <>
-                  💡 <strong>Matrix Mode:</strong> You can manually specify the adjacency matrix to control exactly which pages link to each other.
+                  <label htmlFor="matrix" style={{ marginTop: '20px' }}>Adjacency Matrix (JSON format):</label>
+                  <textarea
+                    id="matrix"
+                    value={adjacencyMatrix}
+                    onChange={(e) => setAdjacencyMatrix(e.target.value)}
+                    placeholder="[[0,1,1,0,0],&#10;[1,0,0,1,0],&#10;[0,1,0,1,1],&#10;[0,0,1,0,1],&#10;[1,0,0,1,0]]"
+                    rows="8"
+                  />
+                  <button 
+                    type="button" 
+                    onClick={generateExampleMatrix}
+                    style={{ marginTop: '10px', backgroundColor: '#4CAF50' }}
+                  >
+                    🎲 Generate Example Matrix
+                  </button>
                 </>
               )}
-            </p>
-          </div>
-          
-          <button type="submit" disabled={loading}>
-            {loading ? (
-              <>
-                <span className="loading"></span>
-                Calculating PageRank...
-              </>
-            ) : (
-              'Calculate PageRank'
-            )}
-          </button>
-        </form>
+
+              <div style={{ marginTop: '20px', display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                <div>
+                  <label htmlFor="damping">Damping Factor (α):</label>
+                  <input
+                    id="damping"
+                    type="number"
+                    min="0.1"
+                    max="0.99"
+                    step="0.01"
+                    value={dampingFactor}
+                    onChange={(e) => setDampingFactor(parseFloat(e.target.value))}
+                    style={{ 
+                      width: '100px', 
+                      padding: '8px', 
+                      border: '2px solid #e3f2fd', 
+                      borderRadius: '4px',
+                      marginLeft: '10px'
+                    }}
+                  />
+                  <small style={{ display: 'block', color: '#666', marginTop: '5px' }}>
+                    Default: 0.85 (Google's standard)
+                  </small>
+                </div>
+                
+                <div>
+                  <label htmlFor="iterations">Max Iterations:</label>
+                  <input
+                    id="iterations"
+                    type="number"
+                    min="10"
+                    max="1000"
+                    value={maxIterations}
+                    onChange={(e) => setMaxIterations(parseInt(e.target.value))}
+                    style={{ 
+                      width: '100px', 
+                      padding: '8px', 
+                      border: '2px solid #e3f2fd', 
+                      borderRadius: '4px',
+                      marginLeft: '10px'
+                    }}
+                  />
+                  <small style={{ display: 'block', color: '#666', marginTop: '5px' }}>
+                    Default: 100
+                  </small>
+                </div>
+              </div>
+
+              <p style={{ marginTop: '15px', fontSize: '14px', color: '#666', textAlign: 'left' }}>
+                {mode === 'urls' ? (
+                  <>
+                    💡 <strong>URL Mode:</strong> The algorithm will automatically crawl each URL to find links between pages and calculate PageRank scores.
+                  </>
+                ) : (
+                  <>
+                    💡 <strong>Matrix Mode:</strong> You can manually specify the adjacency matrix to control exactly which pages link to each other.
+                  </>
+                )}
+              </p>
+            </div>
+            
+            <button type="submit" disabled={loading}>
+              {loading ? (
+                <>
+                  <span className="loading"></span>
+                  Calculating PageRank...
+                </>
+              ) : (
+                'Calculate PageRank'
+              )}
+            </button>
+          </form>
+        )}
 
         {error && <div className="error">{error}</div>}
         {success && <div className="success">{success}</div>}
