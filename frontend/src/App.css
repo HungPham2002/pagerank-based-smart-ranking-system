@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap');
 
-body, .App {
+body, .App, html {
   font-family: 'Roboto', Arial, Helvetica, sans-serif;
-  background: #fff;
-  color: #222;
+  background: #fff !important;
+  color: #222 !important;
   margin: 0;
   padding: 0;
 }
