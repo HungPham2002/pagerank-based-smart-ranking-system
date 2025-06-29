@@ -11,161 +11,22 @@ const aboutContent = `# PageRank Calculator Web Application
 
 A web application to calculate PageRank for websites using Google's PageRank algorithm.
 
-## Getting Started
-
-### Requirements
-- Python 3.7+
-- Node.js 14+
-- npm or yarn
-
-### Step 1: Backend Setup (Python/Flask)
-
-1. **Create a Python virtual environment:**
-\`\`\`bash
-# Windows
-python -m venv venv
-venv\\Scripts\\activate
-
-# macOS/Linux
-python3 -m venv venv
-source venv/bin/activate
-\`\`\`
-
-2. **Install dependencies:**
-\`\`\`
-pip install -r requirements.txt
-\`\`\`
-
-3. **Run the backend server:**
-\`\`\`
-python app.py
-\`\`\`
-
-The backend will run at: http://localhost:5000
-
-### Step 2: Frontend Setup (React)
-
-1. **Navigate to the frontend directory:**
-\`\`\`
-cd frontend
-\`\`\`
-
-2. **Install dependencies:**
-\`\`\`
-npm install
-\`\`\`
-
-3. **Run the frontend development server:**
-\`\`\`
-npm start
-\`\`\`
-
-The frontend will run at: http://localhost:3000
-
-### Step 3: Using the Application
-
-1. Open your browser and go to: http://localhost:3000
-2. Enter the URLs to analyze (one per line)
-3. Click "Calculate PageRank"
-4. View the results and chart
-
-## Project Structure
-
-\`\`\`
-PageRank_Web/
-├── app.py                 # Backend Flask server
-├── requirements.txt       # Python dependencies
-├── frontend/              # React frontend
-│   ├── src/
-│   │   ├── App.js        # Main React component
-│   │   ├── App.css       # Styles
-│   │   └── logo.svg      # Logo
-│   ├── package.json      # Node.js dependencies
-│   └── public/
-└── README.md
-\`\`\`
-
-## Features
-
-- **PageRank Calculation:** Uses Google's PageRank algorithm
-- **Modern UI:** Clean blue and white design
-- **Visualization:** Results displayed as a table and bar chart
-- **Responsive:** Works on both mobile and desktop
-- **Real-time:** Instant calculation and display
-
-## Troubleshooting
-
-### Common Issues:
-
-1. **Port 5000 already in use:**
-\`\`\`
-# Change port in app.py
-app.run(debug=True, port=5001)
-\`\`\`
-
-2. **Port 3000 already in use:**
-\`\`\`
-# React will prompt to use another port
-# Or stop the process using port 3000
-\`\`\`
-
-3. **CORS Error:**
-- Ensure the backend is running
-- Check the API URL in the frontend
-
-4. **Dependency Errors:**
-\`\`\`
-# Backend
-pip install --upgrade pip
-pip install -r requirements.txt
-
-# Frontend
-npm install --force
-\`\`\`
-
 ## How to Use
 
-1. **Enter URLs:** One per line
-   \`\`\`
-   https://example.com
-   https://example.org
-   https://example.net
-   \`\`\`
+- **Crawl URLs Automatically**: Enter a list of URLs (one per line). The system will crawl each website, collect the links between pages, and build the adjacency matrix for PageRank calculation. Use this mode to analyze the real link structure between websites.
 
-2. **Calculate:** Click "Calculate PageRank"
+- **Manual Adjacency Matrix**: Enter the list of URLs and provide the adjacency matrix in JSON format (e.g., [[0,1,0],[1,0,1],[0,1,0]]). Use this mode for full control over the link structure or to experiment with different network topologies.
 
-3. **Results:**
-   - PageRank ranking table
-   - Visualization chart
-   - Scores from 0-1 (higher = more important)
+- **Damping Factor (α)**: This parameter (default 0.85) represents the probability that a user continues clicking on links. Adjust this value (0.1 - 0.99) to simulate more or less patient users. Higher values mean PageRank depends more on the link structure.
 
-## PageRank Algorithm
+- **Max Iterations**: The maximum number of iterations for the PageRank calculation. Default is 100; increase for larger networks or higher accuracy.
 
-PageRank calculates the importance of a web page based on:
-- The number of links to the page
-- The importance of linking pages
-- Damping factor (usually 0.85)
-
-Formula: PR(A) = (1-d)/N + d∑PR(Ti)/C(Ti)
-
-## Notes
-
-- Ensure both backend and frontend are running
-- URLs must include protocol (http:// or https://)
-- Some websites may block crawlers
-- Results depend on the link structure between pages
-
-## UI Design
-
-- **Colors:** Blue and white (#2196F3,#1976D2)
-- **Logo:** Math-inspired with PageRank formula
-- **Responsive:** Works on all devices
-- **Animations:** Smooth transitions
-
-### Final Links
-
-*   **Backend:** https://final-web-pagerank.onrender.com
-*   **Frontend:** https://finalwebpagerank.netlify.app 
+**Steps:**
+1. Select the calculation mode (Crawl URLs or Manual Matrix).
+2. Enter the list of URLs (one per line).
+3. If using Manual Matrix, also enter the adjacency matrix.
+4. Adjust the Damping Factor and Max Iterations if needed.
+5. Click "Calculate PageRank" to view the results and chart.
 `;
 
 function App() {
@@ -403,7 +264,7 @@ function App() {
                     onChange={(e) => setMode(e.target.value)}
                     style={{ marginRight: '8px' }}
                   />
-                  🕷️ Crawl URLs Automatically
+                  Crawl URLs Automatically
                 </label>
                 <label style={{ cursor: 'pointer' }}>
                   <input
@@ -414,7 +275,7 @@ function App() {
                     onChange={(e) => setMode(e.target.value)}
                     style={{ marginRight: '8px' }}
                   />
-                  📊 Manual Adjacency Matrix
+                  Manual Adjacency Matrix
                 </label>
               </div>
 
