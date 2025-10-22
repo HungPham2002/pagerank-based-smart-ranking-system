@@ -1,6 +1,6 @@
-# PageRank Calculator Web Application
+# PageRank-Based Smart Ranking System
 
-A web application to calculate PageRank for websites using Google's PageRank algorithm.
+This web application implements Google’s original PageRank algorithm to compute and visualize the relative importance of web pages within a network. Users can input a set of interconnected websites, and the system automatically craws and calculates their PageRank scores through iterative computation. The project aims to simulate the core mechanism behind modern search engines, providing a hands-on understanding of how link structures influence website ranking and visibility.
 
 ## Getting Started
 
