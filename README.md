@@ -148,6 +148,6 @@ Formula: `PR(A) = (1-d)/N + d∑PR(Ti)/C(Ti)`
 
 ## Acknowledgment
 
-The authors would like to express their sincere gratitude to BSc. Le Nho Han and collaborators for their valuable suggestions and insightful guidance throughout the research and implementation of the PageRank algorithm. Their support and expertise have greatly contributed to the successful completion of this project.
+The authors would like to express their sincere gratitude to BSc. Le Nho Han, BSc. Vu Tran Thanh Huong and collaborators for their valuable suggestions and insightful guidance throughout the research and implementation of the PageRank algorithm. Their support and expertise have greatly contributed to the successful completion of this project.
 
 
