@@ -146,14 +146,8 @@ Formula: `PR(A) = (1-d)/N + d∑PR(Ti)/C(Ti)`
 - Some websites may block crawlers
 - Results depend on the link structure between pages
 
-## UI Design
+## Acknowledgment
 
-- **Colors:** Blue and white (#2196F3,#1976D2)
-- **Logo:** Math-inspired with PageRank formula
-- **Responsive:** Works on all devices
-- **Animations:** Smooth transitions
+The authors would like to express their sincere gratitude to BSc. Le Nho Han and collaborators for their valuable suggestions and insightful guidance throughout the research and implementation of the PageRank algorithm. Their support and expertise have greatly contributed to the successful completion of this project.
 
-### Final Links
 
-*   **Backend:** `https://final-web-pagerank.onrender.com`
-*   **Frontend:** `https://finalwebpagerank.netlify.app` 
