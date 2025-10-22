@@ -183,6 +183,63 @@ def calculate_pagerank(urls, damping_factor=0.85, max_iterations=100):
     # Tính PageRank
     return calculate_pagerank_from_matrix(adjacency_matrix, urls, damping_factor, max_iterations)
 
+# Add a route for the root path
+@app.route('/', methods=['GET'])
+def home():
+    return """
+    <html>
+    <head>
+        <title>PageRank API</title>
+        <style>
+            body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+            code { background-color: #f4f4f4; padding: 2px 4px; border-radius: 4px; }
+            pre { background-color: #f4f4f4; padding: 10px; border-radius: 4px; overflow-x: auto; }
+            h3 { margin-top: 20px; }
+        </style>
+    </head>
+    <body>
+        <h1>PageRank API</h1>
+        <p>This is a PageRank calculation API server.</p>
+        
+        <h2>Available Endpoints:</h2>
+        
+        <h3>1. Calculate PageRank for URLs</h3>
+        <code>POST /api/pagerank</code>
+        <p>Calculates PageRank for a list of URLs by crawling their content and building a link graph.</p>
+        <p>Example request:</p>
+        <pre>
+{
+  "urls": [
+    "https://example.com",
+    "https://example.org"
+  ],
+  "damping_factor": 0.85,
+  "max_iterations": 100
+}
+        </pre>
+        
+        <h3>2. Calculate PageRank with Custom Matrix</h3>
+        <code>POST /api/pagerank-matrix</code>
+        <p>Calculates PageRank using a custom adjacency matrix.</p>
+        <p>Example request:</p>
+        <pre>
+{
+  "urls": [
+    "https://example.com",
+    "https://example.org"
+  ],
+  "adjacency_matrix": [
+    [0, 1],
+    [1, 0]
+  ],
+  "damping_factor": 0.85,
+  "max_iterations": 100
+}
+        </pre>
+    </body>
+    </html>
+    """
+
 @app.route('/api/pagerank', methods=['POST'])
 def pagerank():
     """API endpoint để tính PageRank"""
@@ -260,4 +317,4 @@ def pagerank_matrix():
         return jsonify({'error': 'Internal server error'}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.run(debug=True, port=5001)
