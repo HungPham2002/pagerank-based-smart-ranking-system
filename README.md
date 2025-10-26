@@ -150,7 +150,7 @@ Formula: `PR(A) = (1-d)/N + d∑PR(Ti)/C(Ti)`
 
 ## About This Project
 
-This project was developed as part of the Intelligent Systems (CO5119) course at Ho Chi Minh City University of Technology (HCMUT) – VNU-HCM, under the supervision of Assoc. Prof. Dr. Quan Thanh Tho. It presents a practical implementation of the PageRank algorithm, a cornerstone of modern search engine technology. The project aims to design a smart ranking system that evaluates the relative importance of web pages based on their interconnections, thereby simulating how search engines (Google, etc.) determine page relevance and authority in real-world contexts.
+This project was developed as part of the Intelligent Systems (CO5119) course at Ho Chi Minh City University of Technology (HCMUT) – VNUHCM, under the supervision of Assoc. Prof. Dr. Quan Thanh Tho. It presents a practical implementation of the PageRank algorithm, a cornerstone of modern search engine technology. The project aims to design a smart ranking system that evaluates the relative importance of web pages based on their interconnections, thereby simulating how search engines (Google, etc.) determine page relevance and authority in real-world contexts.
 
 ## Acknowledgment
 
