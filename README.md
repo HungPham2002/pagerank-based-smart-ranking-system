@@ -60,25 +60,11 @@ The frontend will run at: `http://localhost:3000`
 3. Click "Calculate PageRank"
 4. View the results and chart
 
-## Project Structure
-
-```
-PageRank_Web/
-├── app.py                 # Backend Flask server
-├── requirements.txt       # Python dependencies
-├── frontend/              # React frontend
-│   ├── src/
-│   │   ├── App.js        # Main React component
-│   │   ├── App.css       # Styles
-│   │   └── logo.svg      # Logo
-│   ├── package.json      # Node.js dependencies
-│   └── public/
-└── README.md
-```
-
 ## Features
 
 - **PageRank Calculation:** Uses Google's PageRank algorithm
+- **Network Visualization:** Interactive network graph visualization
+- **Network Metrics:** Comprehensive analysis of network structure
 - **Modern UI:** Clean blue and white design
 - **Visualization:** Results displayed as a table and bar chart
 - **Responsive:** Works on both mobile and desktop
@@ -128,6 +114,8 @@ npm install --force
 3. **Results:**
    - PageRank ranking table
    - Visualization chart
+   - Interactive network graph visualization
+   - Netrork metric panels 
    - Scores from 0-1 (higher = more important)
 
 ## PageRank Algorithm
