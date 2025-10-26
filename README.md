@@ -2,6 +2,20 @@
 
 This web application implements Google’s original PageRank algorithm to compute and visualize the relative importance of web pages within a network. Users can input a set of interconnected websites, and the system automatically craws and calculates their PageRank scores through iterative computation. The project aims to simulate the core mechanism behind modern search engines, providing a hands-on understanding of how link structures influence website ranking and visibility.
 
+## 🚀 Live Demo: [Here](https://pagerank-frontend.onrender.com/)
+
+ Input samples:
+- https://en.wikipedia.org/wiki/Google_Search
+- https://en.wikipedia.org/wiki/PageRank
+- https://en.wikipedia.org/wiki/Larry_Page
+- https://en.wikipedia.org/wiki/Sergey_Brin
+- https://en.wikipedia.org/wiki/Google
+- https://en.wikipedia.org/wiki/Search_engine
+- https://en.wikipedia.org/wiki/Web_search_engine
+- https://en.wikipedia.org/wiki/Yahoo!
+- https://en.wikipedia.org/wiki/Bing_(search_engine)
+- https://en.wikipedia.org/wiki/DuckDuckGo
+
 ## Getting Started
 
 ### Requirements
