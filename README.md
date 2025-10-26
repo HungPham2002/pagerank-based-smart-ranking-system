@@ -1,6 +1,6 @@
 # PageRank-Based Smart Ranking System
 
-This web application implements Google’s original PageRank algorithm to compute and visualize the relative importance of web pages within a network. Users can input a set of interconnected websites, and the system automatically craws and calculates their PageRank scores through iterative computation. The project aims to simulate the core mechanism behind modern search engines, providing a hands-on understanding of how link structures influence website ranking and visibility.
+This web application implements Google’s original PageRank algorithm to compute and visualize the relative importance of web pages within a network. Users can input a set of interconnected websites, and the system automatically craws and calculates their PageRank scores through iterative computation. The project aims to simulate the core mechanism behind modern search engines (Google, etc.), providing a hands-on understanding of how link structures influence website ranking and visibility.
 
 ## 🚀 Live Demo: [Here](https://pagerank-frontend.onrender.com/)
 
