@@ -146,8 +146,12 @@ Formula: `PR(A) = (1-d)/N + d∑PR(Ti)/C(Ti)`
 - Some websites may block crawlers
 - Results depend on the link structure between pages
 
+## About This Project
+
+This project was developed as part of the Intelligent Systems (CO5119) course at Ho Chi Minh City University of Technology (HCMUT) – VNU-HCM, under the supervision of Assoc. Prof. Dr. Quan Thanh Tho. It presents a practical implementation of the PageRank algorithm, a cornerstone of modern search engine technology. The project aims to design a smart ranking system that evaluates the relative importance of web pages based on their interconnections, thereby simulating how search engines (Google, etc.) determine page relevance and authority in real-world contexts.
+
 ## Acknowledgment
 
-The authors would like to express their sincere gratitude to BSc. Le Nho Han, BSc. Vu Tran Thanh Huong and collaborators for their valuable suggestions and insightful guidance throughout the research and implementation of the PageRank algorithm. Their support and expertise have greatly contributed to the successful completion of this project.
+The authors would like to express their sincere gratitude to BSc. Le Nho Han, BSc. Vu Tran Thanh Huong for their valuable suggestions and insightful reviews throughout the research and implementation of the PageRank algorithm. Their support and expertise have greatly contributed to the successful completion of this project.
 
 
