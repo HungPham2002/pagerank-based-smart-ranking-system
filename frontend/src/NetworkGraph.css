@@ -1,0 +1,120 @@
+.network-graph-container {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(0, 71, 171, 0.1);
+  padding: 32px;
+  margin: 36px 0;
+  border: 2px solid #e8f0fe;
+  border-top: 4px solid #0047AB;
+}
+
+.graph-header h3 {
+  color: #0047AB;
+  margin-bottom: 20px;
+  font-size: 1.6em;
+  font-weight: 700;
+  border-bottom: 3px solid #FFD700;
+  padding-bottom: 12px;
+  display: inline-block;
+}
+
+.graph-controls {
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.legend {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95em;
+  color: #555;
+}
+
+.legend-color {
+  width: 60px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid #ddd;
+}
+
+.legend-icon {
+  font-size: 1.3em;
+}
+
+.graph-instructions {
+  background: #f5f9ff;
+  padding: 14px;
+  border-radius: 8px;
+  border-left: 4px solid #0047AB;
+  margin: 16px 0;
+  color: #555;
+  font-size: 0.95em;
+}
+
+svg {
+  width: 100%;
+  border: 2px solid #e8f0fe;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fafbff 0%, #f5f9ff 100%);
+  cursor: grab;
+}
+
+svg:active {
+  cursor: grabbing;
+}
+
+.graph-tooltip {
+  position: absolute;
+  background: white;
+  border: 3px solid #0047AB;
+  border-radius: 12px;
+  padding: 16px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0, 71, 171, 0.2);
+  z-index: 1000;
+  max-width: 350px;
+  font-size: 0.95em;
+}
+
+.tooltip-content {
+  line-height: 1.6;
+}
+
+.tooltip-content hr {
+  border: none;
+  border-top: 2px solid #e8f0fe;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .network-graph-container {
+    padding: 20px 16px;
+  }
+  
+  .graph-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .legend {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  svg {
+    height: 400px;
+  }
+}

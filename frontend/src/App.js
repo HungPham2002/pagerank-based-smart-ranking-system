@@ -2,8 +2,36 @@ import React, { useState } from 'react';
 import './App.css';
 import logo from './logo.webp';
 import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
 import ReactMarkdown from 'react-markdown';
+import NetworkGraph from './NetworkGraph';
+import NetworkMetrics from './NetworkMetrics';
+
+import { 
+  Chart as ChartJS, 
+  BarElement, 
+  CategoryScale, 
+  LinearScale, 
+  Tooltip, 
+  Legend,
+  ArcElement,           
+  RadialLinearScale,    
+  PointElement,         
+  LineElement,          
+  Filler              
+} from 'chart.js';
+
+ChartJS.register(
+  BarElement, 
+  CategoryScale, 
+  LinearScale, 
+  Tooltip, 
+  Legend,
+  ArcElement,           
+  RadialLinearScale,    
+  PointElement,         
+  LineElement,          
+  Filler               
+);
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -47,7 +75,7 @@ This project was developed as part of the Intelligent Systems (CO5119) course at
 
 ## Acknowledgment
 
-The authors would like to express their sincere gratitude to BSc. Le Nho Han and collaborators for their valuable suggestions and insightful guidance throughout the research and implementation of the PageRank algorithm. Their support and expertise have greatly contributed to the successful completion of this project.
+The authors would like to express their sincere gratitude to BSc. Le Nho Han and BSc. Vu Tran Thanh Huong for their valuable suggestions and insightful reviews throughout the research and implementation of the PageRank algorithm. Their support and expertise have greatly contributed to the successful completion of this project.
 
 `;
 
@@ -62,98 +90,104 @@ function App() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [page, setPage] = useState('home');
+  const [calculatedAdjacencyMatrix, setCalculatedAdjacencyMatrix] = useState(null);
+  const [networkMetrics, setNetworkMetrics] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    setSuccess('');
-    
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setError('');
+  setSuccess('');
+  
+  const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+  let parsedMatrix = null; 
 
-    try {
-      let requestBody = {
-        damping_factor: dampingFactor,
-        max_iterations: maxIterations
-      };
+  try {
+    let requestBody = {
+      damping_factor: dampingFactor,
+      max_iterations: maxIterations
+    };
 
-      if (mode === 'urls') {
-        const urlList = urls.split('\n').filter(url => url.trim());
-        
-        if (urlList.length === 0) {
-          setError('Please enter at least one URL');
-          setLoading(false);
-          return;
-        }
-        
-        requestBody.urls = urlList;
-        
-        const response = await fetch(`${apiUrl}/api/pagerank`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestBody),
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-          setResults(data.results);
-          setSuccess(`✅ Successfully calculated PageRank for ${data.total_urls} URLs`);
-        } else {
-          setError(data.error || 'An error occurred');
-        }
-      } else {
-        const urlList = urls.split('\n').filter(url => url.trim());
-        
-        if (urlList.length === 0) {
-          setError('Please enter at least one URL');
-          setLoading(false);
-          return;
-        }
-        
-        let matrix;
-        try {
-          matrix = JSON.parse(adjacencyMatrix);
-        } catch (e) {
-          setError('❌ Invalid adjacency matrix format. Please enter a valid JSON array.');
-          setLoading(false);
-          return;
-        }
-        
-        if (!Array.isArray(matrix) || matrix.length !== urlList.length) {
-          setError(`❌ Adjacency matrix must be a ${urlList.length}x${urlList.length} array`);
-          setLoading(false);
-          return;
-        }
-        
-        requestBody.urls = urlList;
-        requestBody.adjacency_matrix = matrix;
-        
-        const response = await fetch(`${apiUrl}/api/pagerank-matrix`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestBody),
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-          setResults(data.results);
-          setSuccess(`✅ Successfully calculated PageRank for ${data.total_urls} URLs using custom matrix`);
-        } else {
-          setError(data.error || 'An error occurred');
-        }
+    if (mode === 'urls') {
+      const urlList = urls.split('\n').filter(url => url.trim());
+      
+      if (urlList.length === 0) {
+        setError('Please enter at least one URL');
+        setLoading(false);
+        return;
       }
-    } catch (err) {
-      setError('❌ Failed to connect to the server. Please make sure the backend is running on port 5001.');
-    } finally {
-      setLoading(false);
+      
+      requestBody.urls = urlList;
+      
+      const response = await fetch(`${apiUrl}/api/pagerank`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setResults(data.results);
+        setCalculatedAdjacencyMatrix(data.adjacency_matrix || null);
+        setNetworkMetrics(data.network_metrics || null);
+        setSuccess(`Successfully calculated PageRank for ${data.total_urls} URLs`);
+      } else {
+        setError(data.error || 'An error occurred');
+      }
+    } else {
+      const urlList = urls.split('\n').filter(url => url.trim());
+      
+      if (urlList.length === 0) {
+        setError('Please enter at least one URL');
+        setLoading(false);
+        return;
+      }
+      
+      try {
+        parsedMatrix = JSON.parse(adjacencyMatrix); // ← SỬA DÒNG NÀY
+      } catch (e) {
+        setError('❌ Invalid adjacency matrix format. Please enter a valid JSON array.');
+        setLoading(false);
+        return;
+      }
+      
+      if (!Array.isArray(parsedMatrix) || parsedMatrix.length !== urlList.length) {
+        setError(`❌ Adjacency matrix must be a ${urlList.length}x${urlList.length} array`);
+        setLoading(false);
+        return;
+      }
+      
+      requestBody.urls = urlList;
+      requestBody.adjacency_matrix = parsedMatrix; // ← SỬA DÒNG NÀY
+      
+      const response = await fetch(`${apiUrl}/api/pagerank-matrix`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setResults(data.results);
+        setCalculatedAdjacencyMatrix(data.adjacency_matrix || parsedMatrix); 
+        setNetworkMetrics(data.network_metrics || null);
+        setSuccess(`✅ Successfully calculated PageRank for ${data.total_urls} URLs using custom matrix`);
+      } else {
+        setError(data.error || 'An error occurred');
+      }
     }
-  };
+  } catch (err) {
+    setError('Failed to connect to the server. Please make sure the backend is running on port 5001.');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const generateExampleMatrix = () => {
     const urlList = urls.split('\n').filter(url => url.trim());
@@ -271,9 +305,9 @@ function App() {
       </header>
       <nav className="hcmus-navbar">
         <ul>
-          <li className={page === 'home' ? 'active' : ''} onClick={() => setPage('home')}>🏠 Home</li>
-          <li className={page === 'about' ? 'active' : ''} onClick={() => setPage('about')}>📖 About</li>
-          <li><a href="mailto:contact@hcmut.edu.vn" style={{ color: 'inherit', textDecoration: 'none' }}>📧 Contact</a></li>
+          <li className={page === 'home' ? 'active' : ''} onClick={() => setPage('home')}> 🏠︎ Home</li>
+          <li className={page === 'about' ? 'active' : ''} onClick={() => setPage('about')}> 🕮 About</li>
+          <li><a href="mailto:contact@hcmut.edu.vn" style={{ color: 'inherit', textDecoration: 'none' }}> ✉ Contact</a></li>
         </ul>
       </nav>
       <main className="App-main hcmus-main">
@@ -460,14 +494,24 @@ function App() {
           </div>
         )}
 
-        {results.length > 0 && (
+        {results.length > 0 && calculatedAdjacencyMatrix && (
+          <NetworkGraph 
+              results={results} 
+              adjacencyMatrix={calculatedAdjacencyMatrix}
+              urls={results.map(r => r.url)}
+            />
+        )}
+        {results.length > 0 && networkMetrics && (
+          <NetworkMetrics 
+              metrics={networkMetrics} results={results} 
+            />
+        )}
           <div className="chart-container">
             <h3>📊 PageRank Score Visualization</h3>
             <div style={{ height: '450px', marginTop: '20px' }}>
               <Bar data={chartData} options={chartOptions} />
             </div>
           </div>
-        )}
       </main>
       <footer className="hcmus-footer">
         <div style={{ marginBottom: '8px', fontSize: '1.05em', fontWeight: '600' }}>
