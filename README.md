@@ -154,6 +154,6 @@ This project was developed as part of the Intelligent Systems (CO5119) course at
 
 ## Acknowledgment
 
-The authors would like to express their sincere gratitude to BSc. Le Nho Han, BSc. Vu Tran Thanh Huong for their valuable suggestions and insightful reviews throughout the research and implementation of the PageRank algorithm. Their support and expertise have greatly contributed to the successful completion of this project.
+The authors would like to express their sincere gratitude to BSc. Le Nho Han and BSc. Vu Tran Thanh Huong for their valuable suggestions and insightful reviews throughout the research and implementation of the PageRank algorithm. Their support and expertise have greatly contributed to the successful completion of this project.
 
 
