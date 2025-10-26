@@ -121,55 +121,42 @@ def build_adjacency_matrix(urls):
     return adjacency_matrix, url_to_index
 
 def calculate_pagerank_from_matrix(adjacency_matrix, urls, damping_factor=0.85, max_iterations=100, tolerance=1e-6):
-    """Tính PageRank từ ma trận kề"""
     n = len(urls)
     
-    # Kiểm tra nếu không có cạnh nào
-    if sum(sum(row) for row in adjacency_matrix) == 0:
-        logger.warning("No edges found between the provided URLs. Assigning equal ranks.")
-        return [(url, 1.0/n) for url in urls]
+    # Xác định dangling nodes
+    dangling_nodes = [i for i in range(n) if sum(adjacency_matrix[i]) == 0]
     
-    # Chuyển ma trận kề thành ma trận chuyển tiếp
-    transition_matrix = []
+    # Xây dựng transition matrix (KHÔNG xử lý dangling ở đây)
+    transition_matrix = np.zeros((n, n))
     for i in range(n):
         row_sum = sum(adjacency_matrix[i])
-        if row_sum == 0:
-            # Dangling node: phân phối đều cho tất cả các node
-            transition_matrix.append([1.0/n] * n)
-            logger.info(f"Dangling node {urls[i]}: distributing rank evenly")
-        else:
-            # Node bình thường: phân phối theo tỷ lệ
-            transition_matrix.append([adjacency_matrix[i][j] / row_sum for j in range(n)])
+        if row_sum > 0:
+            for j in range(n):
+                transition_matrix[j][i] = adjacency_matrix[i][j] / row_sum
     
-    # Khởi tạo PageRank
-    pagerank = [1.0/n] * n
+    # Initialize PageRank
+    pagerank = np.ones(n) / n
     
-    # Lặp PageRank
     for iteration in range(max_iterations):
-        new_pagerank = [0] * n
+        # Tính dangling contribution
+        dangling_contrib = sum(pagerank[i] for i in dangling_nodes)
         
         # Tính PageRank mới
-        for i in range(n):
-            # Đóng góp từ các node khác
-            for j in range(n):
-                new_pagerank[i] += transition_matrix[j][i] * pagerank[j]
-            
-            # Áp dụng damping factor
-            new_pagerank[i] = (1 - damping_factor) / n + damping_factor * new_pagerank[i]
+        new_pagerank = (1 - damping_factor) / n * np.ones(n)
+        new_pagerank += damping_factor * (transition_matrix @ pagerank + dangling_contrib / n * np.ones(n))
         
-        # Kiểm tra hội tụ
-        diff = sum(abs(new_pagerank[i] - pagerank[i]) for i in range(n))
-        if diff < tolerance:
-            logger.info(f"PageRank converged after {iteration + 1} iterations")
+        # Normalize
+        new_pagerank = new_pagerank / np.sum(new_pagerank)
+        
+        # Check convergence
+        if np.linalg.norm(new_pagerank - pagerank, 1) < tolerance:
+            logger.info(f"Converged after {iteration + 1} iterations")
             break
-        
+            
         pagerank = new_pagerank
     
-    # Sắp xếp kết quả
-    results = [(urls[i], pagerank[i]) for i in range(n)]
+    results = [(urls[i], float(pagerank[i])) for i in range(n)]
     results.sort(key=lambda x: x[1], reverse=True)
-    
-    logger.info(f"PageRank calculation completed. Results: {results}")
     return results
 
 def calculate_pagerank(urls, damping_factor=0.85, max_iterations=100):
@@ -270,13 +257,21 @@ def pagerank():
         if len(unique_urls) != len(normalized_urls):
             logger.info(f"Removed {len(normalized_urls) - len(unique_urls)} duplicate URLs")
         
-        results = calculate_pagerank(unique_urls, damping_factor, max_iterations)
+        # Xây dựng ma trận kề
+        adjacency_matrix, url_to_index = build_adjacency_matrix(unique_urls)
         
+        # Tính PageRank
+        results = calculate_pagerank_from_matrix(adjacency_matrix, unique_urls, damping_factor, max_iterations)
+        
+        network_metrics = calculate_network_metrics(adjacency_matrix, unique_urls)
+
         return jsonify({
             'results': [{'url': url, 'rank': float(rank)} for url, rank in results],
             'total_urls': len(unique_urls),
             'damping_factor': damping_factor,
-            'max_iterations': max_iterations
+            'max_iterations': max_iterations,
+            'adjacency_matrix': adjacency_matrix,
+            'network_metrics': network_metrics
         })
         
     except Exception as e:
@@ -305,16 +300,148 @@ def pagerank_matrix():
         
         results = calculate_pagerank_from_matrix(adjacency_matrix, urls, damping_factor, max_iterations)
         
+        network_metrics = calculate_network_metrics(adjacency_matrix, urls)
+
         return jsonify({
             'results': [{'url': url, 'rank': float(rank)} for url, rank in results],
             'total_urls': len(urls),
             'damping_factor': damping_factor,
-            'max_iterations': max_iterations
+            'max_iterations': max_iterations,
+            'adjacency_matrix': adjacency_matrix,
+            'network_metrics': network_metrics
         })
         
     except Exception as e:
         logger.error(f"Server error: {str(e)}")
         return jsonify({'error': 'Internal server error'}), 500
+
+
+def calculate_network_metrics(adjacency_matrix, urls):
+    """Tính toán các metrics của network"""
+    n = len(urls)
+    
+    # Convert to numpy for easier computation
+    adj_matrix = np.array(adjacency_matrix)
+    
+    # 1. In-degree and Out-degree
+    in_degree = adj_matrix.sum(axis=0).tolist()  # Sum columns
+    out_degree = adj_matrix.sum(axis=1).tolist()  # Sum rows
+    
+    # 2. Network Density
+    total_possible_edges = n * (n - 1)  # Directed graph
+    total_edges = adj_matrix.sum()
+    density = float(total_edges / total_possible_edges) if total_possible_edges > 0 else 0
+    
+    # 3. Average Degree
+    avg_in_degree = float(np.mean(in_degree)) if n > 0 else 0
+    avg_out_degree = float(np.mean(out_degree)) if n > 0 else 0
+    
+    # 4. Degree Distribution
+    degree_distribution = {}
+    for degree in in_degree:
+        degree_distribution[int(degree)] = degree_distribution.get(int(degree), 0) + 1
+    
+    # 5. Identify Hub and Authority nodes
+    # Simple heuristic: high out-degree = hub, high in-degree = authority
+    max_out_degree = max(out_degree) if out_degree else 0
+    max_in_degree = max(in_degree) if in_degree else 0
+    
+    hubs = []
+    authorities = []
+    
+    for i, url in enumerate(urls):
+        if out_degree[i] >= max_out_degree * 0.7 and max_out_degree > 0:  # Top 30% out-degree
+            hubs.append({
+                'url': url,
+                'out_degree': int(out_degree[i]),
+                'score': float(out_degree[i] / max_out_degree) if max_out_degree > 0 else 0
+            })
+        
+        if in_degree[i] >= max_in_degree * 0.7 and max_in_degree > 0:  # Top 30% in-degree
+            authorities.append({
+                'url': url,
+                'in_degree': int(in_degree[i]),
+                'score': float(in_degree[i] / max_in_degree) if max_in_degree > 0 else 0
+            })
+    
+    # 6. Clustering Coefficient (local clustering for each node)
+    clustering_coefficients = []
+    for i in range(n):
+        neighbors = [j for j in range(n) if adj_matrix[i][j] > 0]
+        k = len(neighbors)
+        
+        if k < 2:
+            clustering_coefficients.append(0.0)
+            continue
+        
+        # Count edges between neighbors
+        edges_between_neighbors = 0
+        for j in neighbors:
+            for m in neighbors:
+                if j != m and adj_matrix[j][m] > 0:
+                    edges_between_neighbors += 1
+        
+        # Clustering coefficient = actual edges / possible edges
+        possible_edges = k * (k - 1)
+        clustering = edges_between_neighbors / possible_edges if possible_edges > 0 else 0
+        clustering_coefficients.append(float(clustering))
+    
+    avg_clustering = float(np.mean(clustering_coefficients)) if clustering_coefficients else 0
+    
+    # 7. Strongly Connected Components (simplified)
+    # For simplicity, we'll count nodes with both in and out edges
+    strongly_connected = sum(1 for i in range(n) if in_degree[i] > 0 and out_degree[i] > 0)
+    
+    # 8. Isolated Nodes (no connections)
+    isolated_nodes = sum(1 for i in range(n) if in_degree[i] == 0 and out_degree[i] == 0)
+    
+    # 9. Dangling Nodes (no outbound links)
+    dangling_nodes = sum(1 for i in range(n) if out_degree[i] == 0)
+    
+    # 10. Calculate HITS Algorithm (simplified version)
+    hub_scores, authority_scores = calculate_hits_scores(adj_matrix, n)
+    
+    return {
+        'total_nodes': n,
+        'total_edges': int(total_edges),
+        'density': round(density, 4),
+        'avg_in_degree': round(avg_in_degree, 2),
+        'avg_out_degree': round(avg_out_degree, 2),
+        'in_degree': [int(x) for x in in_degree],
+        'out_degree': [int(x) for x in out_degree],
+        'degree_distribution': degree_distribution,
+        'hubs': sorted(hubs, key=lambda x: x['score'], reverse=True)[:5],  # Top 5 hubs
+        'authorities': sorted(authorities, key=lambda x: x['score'], reverse=True)[:5],  # Top 5 authorities
+        'avg_clustering_coefficient': round(avg_clustering, 4),
+        'clustering_coefficients': [round(c, 4) for c in clustering_coefficients],
+        'strongly_connected_nodes': strongly_connected,
+        'isolated_nodes': isolated_nodes,
+        'dangling_nodes': dangling_nodes,
+        'hub_scores': hub_scores,
+        'authority_scores': authority_scores
+    }
+
+def calculate_hits_scores(adj_matrix, n, iterations=20):
+    """Tính Hub và Authority scores bằng HITS algorithm"""
+    # Initialize scores
+    hub_scores = np.ones(n)
+    authority_scores = np.ones(n)
+    
+    for _ in range(iterations):
+        # Update authority scores: sum of hub scores of incoming links
+        new_authority = adj_matrix.T @ hub_scores
+        
+        # Update hub scores: sum of authority scores of outgoing links
+        new_hub = adj_matrix @ authority_scores
+        
+        # Normalize
+        hub_norm = np.linalg.norm(new_hub)
+        auth_norm = np.linalg.norm(new_authority)
+        
+        hub_scores = new_hub / hub_norm if hub_norm > 0 else new_hub
+        authority_scores = new_authority / auth_norm if auth_norm > 0 else new_authority
+    
+    return [round(float(h), 6) for h in hub_scores], [round(float(a), 6) for a in authority_scores]
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
